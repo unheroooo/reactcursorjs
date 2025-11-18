@@ -28,7 +28,7 @@
       order: 2;
     }
   }
-  
+
   &.reverse {
     grid-template-columns: 2fr 1fr;
     
@@ -42,7 +42,7 @@
     }
   }
   
-    .plane-image {
+  .plane-image {
     height: 70vh; // 减少高度
     min-height: 500px;
     position: relative;
@@ -57,7 +57,10 @@
     }
 
     img {
-      display: none;
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
     }
   }
 }
@@ -76,14 +79,14 @@
 
 // 现代化的plane详情
 .plane-details {
-  width: 300px; // 增加宽度
+  width: 300px;
   align-self: center;
   justify-self: center;
   opacity: 0;
   animation: fadeInDetails 1s ease-out forwards;
   
   h6 {
-    font-size: clamp(24px, 3vw, 36px); // 响应式字体
+    font-size: clamp(24px, 3vw, 36px);
     font-weight: 900; // 更粗的字体
     color: var(--nike-white);
     margin-bottom: 20px;
@@ -100,9 +103,10 @@
   
   p {
     font-size: 16px;
-    line-height: 1.6;
+    line-height: 1.8;
     color: var(--nike-gray);
-    margin-bottom: 30px;
+    margin: 18px auto 30px;
+    max-width: 60ch;
     font-weight: 400;
   }
 
@@ -177,5 +181,69 @@
 }
 
 .Plane img {
+  display: block;
+}
+
+/* Hide original image only when plane is ready */
+.curtains-ready .plane-image img {
   display: none;
 }
+
+/* Fallback visual when image failed to load */
+.image-fallback .plane-image {
+  background: linear-gradient(135deg, rgba(255,105,0,0.15), rgba(0,0,0,0.25));
+}
+
+/* Mobile overrides */
+@media (max-width: 768px) {
+  .plane-container {
+    width: 100vw;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "image"
+      "details";
+  }
+  .plane-container .plane-image {
+    height: auto;
+    min-height: 50vh;
+    grid-area: image;
+  }
+  .plane-container .plane-details {
+    width: 100vw;
+    grid-area: details;
+    text-align: center;
+    padding-left: 0;
+    padding-right: 0;
+    margin-top: 12px;
+    
+    h6 {
+      font-size: clamp(20px, 5vw, 28px);
+    }
+    p {
+      font-size: clamp(14px, 2.8vw, 18px);
+      line-height: 1.7;
+      margin: 14px auto 24px;
+      max-width: none;
+    }
+  }
+  .plane-container.direct .plane-details,
+  .plane-container.reverse .plane-details {
+    text-align: center;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .plane-container {
+    width: 100vw;
+  }
+  .plane-container .plane-details {
+    margin-top: 10px;
+    p {
+      margin: 12px auto 20px;
+    }
+  }
+}
+
+/* Desktop keeps original left-right grid; single-column applies only up to 768px */

@@ -68,7 +68,18 @@ const WebPlane = ({ url, title, index, description }) => {
 
       const plane = new Plane(curtains, planeEl.current, planeParams);
 
-      plane.onRender(() => {
+      plane.onReady(() => {
+        const container = planeEl.current && planeEl.current.closest(".plane-container");
+        if (container) {
+          container.classList.add("curtains-ready");
+        }
+      }).onError(() => {
+        const container = planeEl.current && planeEl.current.closest(".plane-container");
+        if (container) {
+          container.classList.remove("curtains-ready");
+          container.classList.add("image-fallback");
+        }
+      }).onRender(() => {
         plane.uniforms.time.value++;
         plane.uniforms.direction.value = someRef.current.scrollEffect / 500;
       });
@@ -110,6 +121,17 @@ const WebPlane = ({ url, title, index, description }) => {
           alt={title}
           crossOrigin="anonymous"
           data-sampler="planeTexture"
+          loading="lazy"
+          decoding="async"
+          sizes="(max-width: 768px) 90vw, 1400px"
+          onError={(e) => {
+            const container = e.currentTarget && e.currentTarget.closest(".plane-container");
+            if (container) {
+              container.classList.remove("curtains-ready");
+              container.classList.add("image-fallback");
+            }
+            e.currentTarget.style.display = "block";
+          }}
         />
       </div>
     </div>
